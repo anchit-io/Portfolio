@@ -1,10 +1,10 @@
-# Anchit Mishra - DevOps Portfolio
+# Anchit Mishra - Terminal DevOps Portfolio
 
 A no-build personal portfolio designed to publish directly with GitHub Pages.
 
 ## Personalise it
 
-The portfolio is tailored to Anchit's DevOps and cloud-infrastructure experience. Add the GitHub username in the live-profile field (or set it as the default value in `index.html`) to display public repositories and profile statistics. The profile panel fetches current public data directly from GitHub's API.
+The portfolio uses an original terminal-inspired interface and is tailored to Anchit's DevOps and cloud-infrastructure experience. It loads public repositories and profile statistics for `anchit-io` directly from the GitHub API.
 
 ## Publish with GitHub Pages
 

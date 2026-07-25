@@ -1,67 +1,62 @@
 const $ = (selector) => document.querySelector(selector);
 
-const formatNumber = (n) => new Intl.NumberFormat('en', { notation: n > 9999 ? 'compact' : 'standard', maximumFractionDigits: 1 }).format(n || 0);
+const intro = '"Engineering resilient cloud infrastructure, one reliable deployment at a time."';
+let character = 0;
+const typeIntro = setInterval(() => {
+  $('#typed-text').textContent += intro[character++];
+  if (character >= intro.length) clearInterval(typeIntro);
+}, 24);
 
-function setStatus(message, isError = false) {
-  const status = $('#github-status');
-  status.textContent = message;
-  status.style.color = isError ? 'var(--coral)' : '';
+const focusItems = ['Cloud Automation', 'Kubernetes Delivery', 'Reliable Operations', 'Infrastructure as Code'];
+let focusIndex = 0;
+setInterval(() => {
+  focusIndex = (focusIndex + 1) % focusItems.length;
+  $('#focus-cycle').textContent = focusItems[focusIndex];
+}, 2200);
+
+const commands = {
+  help: 'Available commands: help, skills, status, projects, contact',
+  skills: 'AWS · Azure · Kubernetes · Docker · Terraform · Jenkins · Argo CD · Prometheus · Grafana',
+  status: '● All systems operational. Actively seeking DevOps / Cloud Engineer opportunities.',
+  projects: '3 featured deployments available. Scroll to projects/ to inspect them.',
+  contact: 'Email: ancmishra1998@gmail.com · GitHub: github.com/anchit-io'
+};
+function runTerminalCommand() {
+  const input = $('#terminal-command');
+  const value = input.value.trim().toLowerCase();
+  $('#terminal-output').textContent = commands[value] || (value ? `command not found: ${value}. Try help.` : 'Enter a command, then press Run.');
+  input.value = '';
 }
+$('#run-command').addEventListener('click', runTerminalCommand);
+$('#terminal-command').addEventListener('keydown', event => { if (event.key === 'Enter') runTerminalCommand(); });
 
-function displayProfile(profile, repos) {
-  $('#avatar').src = profile.avatar_url;
-  $('#avatar').alt = `${profile.login} GitHub avatar`;
-  $('#profile-handle').textContent = `@${profile.login}`;
-  $('#profile-name').textContent = profile.name || profile.login;
-  $('#profile-bio').textContent = profile.bio || 'Building in public on GitHub.';
-  $('#profile-link').href = profile.html_url;
-  $('#repos').textContent = formatNumber(profile.public_repos);
-  $('#followers').textContent = formatNumber(profile.followers);
-  $('#following').textContent = formatNumber(profile.following);
-  $('#location').textContent = profile.location || 'Remote';
-  $('#repo-count').textContent = `${repos.length} recent repositories`;
-  $('#repo-items').innerHTML = repos.length ? repos.map(repo => `
-    <article class="repo"><h4><a href="${repo.html_url}" target="_blank" rel="noreferrer">${repo.name} ↗</a></h4>
-    <p>${repo.description || 'No description provided.'}</p>
-    <div class="repo-meta"><span class="language">${repo.language || 'Code'}</span><span>★ ${formatNumber(repo.stargazers_count)}</span></div></article>`).join('') : '<p class="loading">No public repositories to show.</p>';
-}
-
-async function loadGitHubProfile() {
-  const username = $('#github-user').value.trim().replace(/^@/, '');
-  if (!username) return setStatus('Enter a GitHub username first.', true);
-  const button = $('#load-profile');
-  button.disabled = true; button.textContent = 'Loading…';
-  setStatus(`Fetching @${username} from GitHub…`);
-  try {
-    const [profileResponse, repoResponse] = await Promise.all([
-      fetch(`https://api.github.com/users/${encodeURIComponent(username)}`),
-      fetch(`https://api.github.com/users/${encodeURIComponent(username)}/repos?sort=updated&per_page=3`)
-    ]);
-    if (!profileResponse.ok) throw new Error(profileResponse.status === 404 ? 'That GitHub user was not found.' : 'GitHub could not load this profile right now.');
-    const [profile, repos] = await Promise.all([profileResponse.json(), repoResponse.ok ? repoResponse.json() : []]);
-    displayProfile(profile, repos);
-    setStatus(`Live data loaded for @${profile.login}.`);
-  } catch (error) {
-    setStatus(error.message, true);
-  } finally {
-    button.disabled = false; button.textContent = 'Load profile';
-  }
-}
-
-$('#load-profile').addEventListener('click', loadGitHubProfile);
-$('#github-user').addEventListener('keydown', (event) => { if (event.key === 'Enter') loadGitHubProfile(); });
-
-document.querySelectorAll('.filter').forEach(button => button.addEventListener('click', () => {
-  document.querySelector('.filter.active').classList.remove('active');
+document.querySelectorAll('.filters button').forEach(button => button.addEventListener('click', () => {
+  document.querySelector('.filters .active').classList.remove('active');
   button.classList.add('active');
-  document.querySelectorAll('.project-card').forEach(card => card.classList.toggle('hide', button.dataset.filter !== 'all' && card.dataset.category !== button.dataset.filter));
+  document.querySelectorAll('.project').forEach(project => project.classList.toggle('hide', button.dataset.filter !== 'all' && !project.classList.contains(button.dataset.filter)));
 }));
 
-$('#theme-toggle').addEventListener('click', () => {
-  document.body.classList.toggle('dark');
-  localStorage.setItem('portfolio-theme', document.body.classList.contains('dark') ? 'dark' : 'light');
-});
-if (localStorage.getItem('portfolio-theme') === 'dark') document.body.classList.add('dark');
+async function loadGitHub() {
+  try {
+    const [profileResponse, reposResponse] = await Promise.all([
+      fetch('https://api.github.com/users/anchit-io'),
+      fetch('https://api.github.com/users/anchit-io/repos?sort=updated&per_page=3')
+    ]);
+    if (!profileResponse.ok) throw new Error('GitHub is temporarily unavailable.');
+    const profile = await profileResponse.json();
+    const repos = reposResponse.ok ? await reposResponse.json() : [];
+    $('#profile-name').textContent = profile.name || 'Anchit Mishra';
+    $('#profile-bio').textContent = profile.bio || 'Public repositories, updated directly from GitHub.';
+    $('#profile-link').href = profile.html_url;
+    $('#repos').textContent = profile.public_repos;
+    $('#followers').textContent = profile.followers;
+    $('#following').textContent = profile.following;
+    $('#repo-items').innerHTML = repos.length ? repos.map(repo => `<article class="repo"><a href="${repo.html_url}" target="_blank" rel="noreferrer">${repo.name} ↗</a><p>${repo.description || 'No description added yet.'}</p><small>● ${repo.language || 'Code'} · ★ ${repo.stargazers_count}</small></article>`).join('') : '<p>No public repositories found yet.</p>';
+  } catch (error) {
+    $('#profile-bio').textContent = 'Live GitHub data could not load. Please try again shortly.';
+    $('#repo-items').innerHTML = `<p>${error.message}</p>`;
+  }
+}
+loadGitHub();
 
-const observer = new IntersectionObserver(entries => entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('shown'); observer.unobserve(entry.target); } }), { threshold: .12 });
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+document.addEventListener('mousemove', event => { $('.cursor-glow').style.left = `${event.clientX}px`; $('.cursor-glow').style.top = `${event.clientY}px`; });
