@@ -216,35 +216,6 @@
     </div>
   </section>
 
-  <section id="orbit" class="orbit-section">
-    <div class="wrap">
-      <p class="eyebrow">./launch_orbit_runner.sh</p>
-      <h2 class="title">Orbit Runner<span>_</span></h2>
-      <div class="game-shell">
-        <div class="game-copy">
-          <span class="game-kicker"><i class="dot pulse"></i> mission control online</span>
-          <h3>Navigate the debris field.</h3>
-          <p>Use <kbd>←</kbd> <kbd>→</kbd> or <kbd>A</kbd> <kbd>D</kbd> to steer your ship. Collect blue energy cores and dodge incoming asteroids.</p>
-          <p class="game-note">P.S. If my portfolio gets boring, you can always play Orbit Runner. Thanks for the visit! 🚀</p>
-          <div class="game-stats" aria-live="polite">
-            <div><span>score</span><strong id="game-score">0000</strong></div>
-            <div><span>best</span><strong id="game-best">0000</strong></div>
-            <div><span>shield</span><strong id="game-shield">3</strong></div>
-          </div>
-          <button class="btn primary game-start" id="game-start" type="button">Launch mission</button>
-        </div>
-        <div class="game-stage-wrap">
-          <canvas id="orbit-game" width="680" height="390" aria-label="Orbit Runner space game"></canvas>
-          <div class="game-overlay" id="game-overlay"><span>Ready for launch</span><small>Press launch mission to begin</small></div>
-          <div class="game-controls" aria-label="Game controls">
-            <button type="button" class="game-control" data-direction="left" aria-label="Move ship left">←</button>
-            <button type="button" class="game-control" data-direction="right" aria-label="Move ship right">→</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <section id="certs">
     <div class="wrap">
       <p class="eyebrow">AZ certification list --verified</p>
@@ -295,6 +266,35 @@
         </div>
         <div class="repo-grid" id="gh-repo-list">
           <p style="grid-column:1/-1;color:var(--muted);font-size:13px">Connecting to GitHub…</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+    <section id="orbit" class="orbit-section">
+    <div class="wrap">
+      <p class="eyebrow">./launch_orbit_runner.sh</p>
+      <h2 class="title">Orbit Runner<span>_</span></h2>
+      <div class="game-shell">
+        <div class="game-copy">
+          <span class="game-kicker"><i class="dot pulse"></i> mission control online</span>
+          <h3>Navigate the debris field.</h3>
+          <p>Use <kbd>←</kbd> <kbd>→</kbd> or <kbd>A</kbd> <kbd>D</kbd> to steer your ship. Collect blue energy cores and dodge incoming asteroids.</p>
+          <p class="game-note">P.S. If my portfolio gets boring, you can always play Orbit Runner. Thanks for the visit! 🚀</p>
+          <div class="game-stats" aria-live="polite">
+            <div><span>score</span><strong id="game-score">0000</strong></div>
+            <div><span>best</span><strong id="game-best">0000</strong></div>
+            <div><span>shield</span><strong id="game-shield">3</strong></div>
+          </div>
+          <button class="btn primary game-start" id="game-start" type="button">Launch mission</button>
+        </div>
+        <div class="game-stage-wrap">
+          <canvas id="orbit-game" width="680" height="390" aria-label="Orbit Runner space game"></canvas>
+          <div class="game-overlay" id="game-overlay"><span>Ready for launch</span><small>Press launch mission to begin</small></div>
+          <div class="game-controls" aria-label="Game controls">
+            <button type="button" class="game-control" data-direction="left" aria-label="Move ship left">←</button>
+            <button type="button" class="game-control" data-direction="right" aria-label="Move ship right">→</button>
+          </div>
         </div>
       </div>
     </div>
